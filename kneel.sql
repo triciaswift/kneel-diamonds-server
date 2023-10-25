@@ -66,3 +66,5 @@ INSERT INTO `Orders` (id, metalId, styleId, sizeId, timestamp) VALUES
 (null, 1, 3, 1, '2023-10-13'),
 (null, 5, 2, 1, '2023-10-14'),
 (null, 1, 4, 1, '2023-10-15');
+
+
