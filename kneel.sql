@@ -68,3 +68,9 @@ INSERT INTO `Orders` (id, metalId, styleId, sizeId, timestamp) VALUES
 (null, 1, 4, 1, '2023-10-15');
 
 
+
+SELECT 
+    s.id, 
+    s.carets, 
+    s.price 
+FROM Sizes s;
