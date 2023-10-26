@@ -3,7 +3,7 @@ from nss_handler import HandleRequests, status
 
 
 # Add your imports below this line
-from views import MetalsView
+from views import MetalsView, StylesView
 
 
 class JSONServer(HandleRequests):
@@ -17,10 +17,7 @@ class JSONServer(HandleRequests):
             return self.response("No view for that route", status.HTTP_404_NOT_FOUND)
 
     def do_PUT(self):
-        return self.response(
-            "",
-            status.HTTP_405_UNSUPPORTED
-        )
+        return self.response("", status.HTTP_405_UNSUPPORTED)
 
     def do_POST(self):
         # Parse the URL
@@ -33,10 +30,7 @@ class JSONServer(HandleRequests):
             view.create(self, self.get_request_body())
         # Make sure you handle the AttributeError in case the client requested a route that you don't support
         except AttributeError:
-            return self.response(
-                "",
-                status.HTTP_405_UNSUPPORTED
-            )
+            return self.response("", status.HTTP_405_UNSUPPORTED)
 
     def do_DELETE(self):
         url = self.parse_url(self.path)
@@ -45,10 +39,7 @@ class JSONServer(HandleRequests):
         try:
             view.delete(self, url["pk"])
         except AttributeError:
-            return self.response(
-                "",
-                status.HTTP_405_UNSUPPORTED
-            )
+            return self.response("", status.HTTP_405_UNSUPPORTED)
 
     def determine_view(self, url):
         """Lookup the correct view class to handle the requested route
@@ -60,9 +51,7 @@ class JSONServer(HandleRequests):
             Any: An instance of the matching view class
         """
         try:
-            routes = {
-                "metals": MetalsView
-            }
+            routes = {"metals": MetalsView, "styles": StylesView}
 
             matching_class = routes[url["requested_resource"]]
             return matching_class()
