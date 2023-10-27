@@ -6,13 +6,13 @@ from services import create_order, expand_metal, expand_style, expand_size
 
 
 class OrdersView:
-    def get(self, handler, pk):
+    def get(self, handler, query_params, pk):
         """Method for handling GET requests for /orders
         Args:
             handler (object): HTTP request handle to send response
             pk (int): Primary key of request resource
         Returns:
-            handler response
+            JSON string & integer
         """
 
         sql = "SELECT o.id, o.metalId, o.styleId, o.sizeId, o.timestamp FROM Orders o"

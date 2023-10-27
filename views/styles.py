@@ -7,7 +7,7 @@ from repository import db_get_all, db_get_single
 class StylesView:
     """Style View Class"""
 
-    def get(self, handler, pk):
+    def get(self, handler, query_params, pk):
         """Method for handling GET requests for /styles
         Args:
             handler (object): HTTP request handle to send response
@@ -23,6 +23,8 @@ class StylesView:
             query_results = db_get_single(sql, pk)
             serialized_styles = json.dumps(dict(query_results))
         else:
+            if "_sortBy" in query_params:
+                sql += " ORDER BY s.price"
             query_results = db_get_all(sql)
             styles = [dict(row) for row in query_results]
             serialized_styles = json.dumps(styles)
