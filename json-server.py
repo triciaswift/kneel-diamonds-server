@@ -12,7 +12,10 @@ class JSONServer(HandleRequests):
         view = self.determine_view(url)
 
         try:
-            view.get(self, url["pk"])
+            if "expand" in url["query_params"]:
+                view.expand(self, url["query_params"], url["pk"])
+            else:
+                view.get(self, url["pk"])
         except AttributeError:
             return self.response("No view for that route", status.HTTP_404_NOT_FOUND)
 
