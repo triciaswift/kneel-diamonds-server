@@ -31,10 +31,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         Returns:
             string: JSON serialized request body
         """
-        content_len = int(self.headers.get("content-length", 0))
-        request_body = self.rfile.read(content_len)
-        request_body = json.loads(request_body)
-        return request_body
+        content_len = int(self.headers.get("content-length", 0))  # Returns integer
+        request_body = self.rfile.read(content_len)  # string
+        request_body = json.loads(request_body)  # converted the string to a dictionary
+        return request_body  # returns a dictionary
 
     def parse_url(self, path):
         """Parse the url into the resource and id"""

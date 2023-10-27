@@ -15,7 +15,7 @@ class JSONServer(HandleRequests):
             if "expand" in url["query_params"]:
                 view.expand(self, url["query_params"], url["pk"])
             else:
-                view.get(self, url["pk"])
+                view.get(self, url["query_params"], url["pk"])
         except AttributeError:
             return self.response("No view for that route", status.HTTP_404_NOT_FOUND)
 
@@ -62,7 +62,9 @@ class JSONServer(HandleRequests):
             }
 
             matching_class = routes[url["requested_resource"]]
-            return matching_class()
+            return (
+                matching_class()
+            )  # creating an instance of the class matching_class is equal to
         except KeyError:
             return status.HTTP_404_NOT_FOUND
 
