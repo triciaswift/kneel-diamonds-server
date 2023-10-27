@@ -2,7 +2,13 @@
 import json
 from nss_handler import status
 from repository import db_get_all, db_get_single, db_create, db_delete
-from services import create_order, expand_metal, expand_style, expand_size
+from utils import (
+    create_order,
+    expand_metal,
+    expand_style,
+    expand_size,
+    check_orders_for,
+)
 
 
 class OrdersView:
@@ -22,7 +28,19 @@ class OrdersView:
             query_results = db_get_single(sql, pk)
             serialized_orders = json.dumps(dict(query_results))
         else:
-            query_results = db_get_all(sql)
+            if query_params:
+                if "metal" in query_params:
+                    sql += " WHERE o.metalId = ?"
+                    fk = int(query_params["metal"][0])
+                if "style" in query_params:
+                    sql += " WHERE o.styleId = ?"
+                    fk = int(query_params["style"][0])
+                if "size" in query_params:
+                    sql += " WHERE o.sizeId = ?"
+                    fk = int(query_params["size"][0])
+                query_results = db_get_all(sql, fk)
+            else:
+                query_results = db_get_all(sql, pk)
             orders = [dict(row) for row in query_results]
             serialized_orders = json.dumps(orders)
 
@@ -62,37 +80,15 @@ class OrdersView:
         if pk != 0:
             sql += " WHERE o.id = ?"
             query_results = db_get_single(sql, pk)
-            order = create_order(query_results)
-
-            if "metal" in query_params["expand"]:
-                selected_metal = expand_metal(query_results)
-                order["metal"] = selected_metal
-            if "style" in query_params["expand"]:
-                selected_style = expand_style(query_results)
-                order["style"] = selected_style
-            if "size" in query_params["expand"]:
-                selected_size = expand_size(query_results)
-                order["size"] = selected_size
-
+            order = check_orders_for(query_results, query_params)
             serialized_hauler = json.dumps(order)
             return handler.response(serialized_hauler, status.HTTP_200_SUCCESS)
 
         else:
-            query_results = db_get_all(sql)
+            query_results = db_get_all(sql, pk)
             orders = []
             for row in query_results:
-                order = create_order(row)
-
-                if "metal" in query_params["expand"]:
-                    selected_metal = expand_metal(row)
-                    order["metal"] = selected_metal
-                if "style" in query_params["expand"]:
-                    selected_style = expand_style(row)
-                    order["style"] = selected_style
-                if "size" in query_params["expand"]:
-                    selected_size = expand_size(row)
-                    order["size"] = selected_size
-
+                order = check_orders_for(row, query_params)
                 orders.append(order)
 
             serialized_orders = json.dumps(orders)

@@ -25,7 +25,7 @@ class StylesView:
         else:
             if "_sortBy" in query_params:
                 sql += " ORDER BY s.price"
-            query_results = db_get_all(sql)
+            query_results = db_get_all(sql, pk)
             styles = [dict(row) for row in query_results]
             serialized_styles = json.dumps(styles)
 

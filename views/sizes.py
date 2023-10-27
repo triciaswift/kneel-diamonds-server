@@ -25,7 +25,7 @@ class SizesView:
         else:
             if "_sortBy" in query_params:
                 sql += " ORDER BY s.price"
-            query_results = db_get_all(sql)
+            query_results = db_get_all(sql, pk)
             sizes = [dict(row) for row in query_results]
             serialized_sizes = json.dumps(sizes)
 
