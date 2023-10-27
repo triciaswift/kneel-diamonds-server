@@ -65,4 +65,6 @@ def db_create(sql, data_tuple) -> int:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
         db_cursor.execute(sql, data_tuple)
-        return db_cursor.lastrowid
+        new_id = db_cursor.lastrowid
+        db_cursor.execute("SELECT * FROM orders WHERE id=?", (new_id,))
+        return db_cursor.fetchone()
