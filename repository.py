@@ -18,7 +18,7 @@ def db_get_single(sql, pk) -> sqlite3.Row:
         return db_cursor.fetchone()
 
 
-def db_get_all(sql) -> list:
+def db_get_all(sql, pk) -> list:
     """Retrieve all rows from a database table
 
     Args:
@@ -30,7 +30,10 @@ def db_get_all(sql) -> list:
     with sqlite3.connect("./kneeldiamonds.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        db_cursor.execute(sql)
+        if pk != 0:
+            db_cursor.execute(sql, (pk,))
+        else:
+            db_cursor.execute(sql)
         return db_cursor.fetchall()
 
 

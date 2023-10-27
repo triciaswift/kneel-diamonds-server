@@ -67,9 +67,10 @@ INSERT INTO `Orders` (id, metalId, styleId, sizeId) VALUES
 (null, 5, 2, 1),
 (null, 1, 4, 1);
 
-SELECT
-    m.id metal_id,
-    m.metal,
-    m.price
-FROM Metals m
-ORDER BY m.price;
+SELECT 
+    o.id, 
+    o.metalId, 
+    o.styleId, 
+    o.sizeId
+FROM Orders o
+WHERE metalId = 1;

@@ -21,3 +21,19 @@ def expand_style(row):
 def expand_size(row):
     size = {"id": row["size_id"], "carets": row["carets"], "price": row["size_price"]}
     return size
+
+
+def check_orders_for(row, query_params):
+    order = create_order(row)
+
+    if "metal" in query_params["expand"]:
+        selected_metal = expand_metal(row)
+        order["metal"] = selected_metal
+    if "style" in query_params["expand"]:
+        selected_style = expand_style(row)
+        order["style"] = selected_style
+    if "size" in query_params["expand"]:
+        selected_size = expand_size(row)
+        order["size"] = selected_size
+
+    return order

@@ -25,7 +25,7 @@ class MetalsView:
         else:
             if "_sortBy" in query_params:
                 sql += " ORDER BY m.price"
-            query_results = db_get_all(sql)
+            query_results = db_get_all(sql, pk)
             metals = [dict(row) for row in query_results]
             serialized_metals = json.dumps(metals)
 
