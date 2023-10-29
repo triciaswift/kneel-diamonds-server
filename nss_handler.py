@@ -22,7 +22,7 @@ class HandleRequests(BaseHTTPRequestHandler):
             body (any): Data to send in response
             code (int): HTTP response code
         """
-        self.set_response_code(code.value)
+        self.set_response_code(body, code.value)
         self.wfile.write(body.encode())  # Where response to client happens
 
     def get_request_body(self):
@@ -56,10 +56,12 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         return url_dictionary
 
-    def set_response_code(self, status_code):
+    def set_response_code(self, body, status_code):
         self.send_response(status_code)
         self.send_header("Content-type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
+        if status_code == 405:
+            self.send_header("Allow", ", ".join(body))
         self.end_headers()
 
     def do_OPTIONS(self):
